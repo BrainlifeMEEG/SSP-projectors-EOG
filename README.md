@@ -1,5 +1,67 @@
 # Compute EOG Artifact SSP Projectors
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+> **Compute SSP (signal-space projection) vectors for EOG artifacts.**
+
+Detects EOG (blink and eye-movement) events in continuous MEG/EEG data and computes SSP projectors for them with mne.preprocessing.compute_proj_eog, then saves the projectors, topomap and EOG-evoked figures and an HTML report. Use it to build EOG projectors to apply in later preprocessing. As noted in the README, main.py reads a qrs_threshold key that is not a registered parameter and passes it to compute_proj_eog, which has no such argument, so runs are expected to fail until this is fixed.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/meeg/mne/raw` |
+| 📤 **Outputs** | `neuro/meeg/mne/projection` · `generic/image/png` |
+| 🐳 **Container** | `brainlifemeeg/mne:1.12.1` |
+| ⚙️ **Resources** | 1 CPUs · 0.17 h walltime |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.673](https://doi.org/10.25663/brainlife.app.673) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `fif` | `neuro/meeg/mne/raw` | yes | Continuous MEG/EEG recording in MNE raw .fif format, with an EOG channel or a channel named by ch_name. |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `out_dir` | `neuro/meeg/mne/projection` | SSP projector computed based on EOG. |
+| `out_figs` | `generic/image/png` | Topomap of the EOG projectors (eog_projectors.png) and EOG-evoked joint plots (eog_*.png). |
+
+<details>
+<summary><b>⚙️ Parameters</b> (21)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `ch_name` | string |  | If not None, specify EOG channel name. |
+| `n_grad` | number | `2` | Number of SSP vectors for gradiometers. |
+| `n_mag` | number | `2` | Number of SSP vectors for magnetometers. |
+| `n_eeg` | number | `2` | Number of SSP vectors for EEG. |
+| `tmin` | number | `-0.2` | Start of the epoch around each detected EOG event, in seconds. |
+| `tmax` | number | `0.2` | End of the epoch around each detected EOG event, in seconds. |
+| `l_freq` | number | `1` | Filter low cut-off frequency for the data channels in Hz. |
+| `h_freq` | number | `35` | Filter high cut-off frequency for the data channels in Hz. |
+| `average` | boolean | `true` | Compute SSP after averaging. Default is True. |
+| `filter_length` | string | `10s` | Number of taps to use for filtering. |
+| `avg_ref` | boolean | `false` | Add EEG average reference proj. |
+| `no_proj` | boolean | `false` | Exclude the SSP projectors currently in the fiff file. |
+| `event_id` | number | `998` | ID to use for events. |
+| `eog_l_freq` | number | `1` | Low pass frequency applied to the EOG channel for event detection. |
+| `eog_h_freq` | number | `10` | High pass frequency applied to the EOG channel for event detection. |
+| `tstart` | number | `0` | Start artifact detection after tstart seconds. |
+| `filter_method` | string | `fir` | Method for filtering (‘iir’ or ‘fir’). |
+| `copy` | boolean | `true` | Not read: the code always passes copy=True. |
+| `return_drop_log` | boolean | `true` | Not read: the code always passes return_drop_log=False. |
+| `meg` | string | `separate` | Can be ‘separate’ (default) or ‘combined’ to compute projectors for magnetometers and gradiometers separately or jointly. If ‘combined’, n_mag == n_grad is required and the number of projectors computed for MEG will be n_mag. |
+| `iir_params` | string |  | Dictionary of parameters to use for IIR filtering. See mne.filter.construct_iir_filter for details. If iir_params is None and method=”iir”, 4th order Butterworth will be used. |
+
+</details>
+
+📚 **References used by this App:**
+- Hayashi S, Caron BA, Heinsfeld AS, et al. brainlife.io: a decentralized and open-source cloud platform to support neuroscience research. Nat Methods 21, 809-813 (2024). [doi:10.1038/s41592-024-02237-2](https://doi.org/10.1038/s41592-024-02237-2)
+- Gramfort A, et al. MEG and EEG data analysis with MNE-Python. Front Neurosci 7:267 (2013). [doi:10.3389/fnins.2013.00267](https://doi.org/10.3389/fnins.2013.00267)
+
+<!-- brainlife-app:end -->
+
 [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.673-blue.svg)](https://doi.org/10.25663/brainlife.app.673)
 
 ## Description
